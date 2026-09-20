@@ -1,0 +1,32 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/server-manifest.json",
+  "name": "dwel",
+  "title": "DWEL: Agent Cycle Detection and Loop Interceptor",
+  "version": "0.1.0",
+  "description": "Deterministic runtime cycle detection and execution loop prevention for autonomous AI agents.",
+  "author": "Jaswanth Reddy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jaswanth1902/dwel.git"
+  },
+  "runtime": "python",
+  "entrypoint": "dwel.server:main",
+  "transport": {
+    "type": "stdio"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "keywords": [
+    "agents",
+    "loop-detection",
+    "cycle-interceptor",
+    "mcp",
+    "model-context-protocol",
+    "python",
+    "trajectory-stabilizer"
+  ]
+}
