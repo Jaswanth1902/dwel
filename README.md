@@ -1,41 +1,30 @@
-# DWEL (Directed Walk & Execution-Loop Interceptor)
+<div align="center">
 
-[![PyPI version](https://img.shields.io/badge/pypi-v0.1.0-blue.svg)](https://pypi.org/project/dwel/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+# 🛑 DWEL
+### Ultra-Lightweight Token Budget & Loop Circuit Breaker for AI Agents
 
-**DWEL** is a zero-dependency, ultra-low-latency (< 0.5ms) cycle detection and trajectory stabilizer for autonomous AI agents and tool-calling loops.
+[![Runtime: Sub-Millisecond](https://img.shields.io/badge/Interception-<0.5ms-brightgreen?style=flat-square)](https://github.com/Jaswanth1902/dwel)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python)]()
+[![Zero-Dependency](https://img.shields.io/badge/Dependencies-Zero-success?style=flat-square)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
-## The Problem
-When autonomous agents hit failing tool calls or ambiguous environments, they frequently enter degenerative loops:
-1. **Immediate Stutters**: Repeatedly calling the same tool with identical parameters.
-2. **Oscillating Cycles**: Alternating between two or three steps (e.g. `list_dir` -> `view_file` -> `list_dir` -> `view_file`) without progressing environment state.
+**Stop runaway AI agent loops from burning your API credit balance.**  
+DWEL intercepts non-progressing agent loops, repeated identical tool calls, and runaway token expansion in sub-millisecond latency.
 
-DWEL intercepts cycles deterministically using rolling action hashing and n-gram trajectory matching before token burn occurs.
+[🚀 3-Line Quickstart](#quickstart) • [🛡️ Circuit Breaker Modes](#modes) • [📊 Benchmarks](#benchmarks)
 
-## Installation
-```bash
-pip install dwel
-```
+</div>
 
-## Quick Start
+---
+
+### 🚀 3-Line Quickstart
+
 ```python
-from dwel import CycleDetector, ActionTrace
+from dwel import circuit_breaker
 
-detector = CycleDetector(window_size=8, max_cycle_repeats=2)
-
-# Record action traces
-trace = ActionTrace(tool="view_file", params={"path": "config.json"})
-is_cycle, diag = detector.evaluate(trace)
-
-if is_cycle:
-    print(f"Cycle intercepted! Length: {diag.cycle_length}, Reason: {diag.reason}")
-    # Inject remediation directive to agent prompt
+@circuit_breaker(max_cycles=3, max_tokens=8000)
+def agent_execution_step(prompt, history):
+    # If the agent attempts 3 identical actions or exceeds token budget,
+    # DWEL raises CircuitBreakerTripped and cleanly halts the loop.
+    return llm.generate(prompt, history)
 ```
-
-## Benchmarks
-- Hash & Detection Latency: **< 0.15ms** per action on standard modern x86/ARM hardware.
-- Memory Overhead: **< 32KB** per session history buffer.
-- External Dependencies: **Zero** (pure Python standard library).
-
-## License
-Distributed under the Apache License, Version 2.0. Copyright (c) 2026 Jaswanth Reddy.
